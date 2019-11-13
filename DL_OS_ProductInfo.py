@@ -104,20 +104,20 @@ for i in range(3):
 #        continue
 
     # Click dropdown menus and download excel file
-    try:
-        if driver.find_element_by_xpath('//*[@id="mstr119"]').get_attribute("onclick"):
-            driver.find_element_by_xpath('//*[@id="mstr119"]').click()
+    try:#119 120 121
+        if driver.find_element_by_xpath('//*[@id="mstr121"]').get_attribute("onclick"):
+            driver.find_element_by_xpath('//*[@id="mstr121"]').click()
             time.sleep(3)
             driver.find_element_by_xpath('//*[@class="mstrmojo-ContextMenuItem cmd4"]').click()
             time.sleep(3)
             
-        elif driver.find_element_by_xpath('//*[@id="mstr120"]').get_attribute("onclick"):
-            driver.find_element_by_xpath('//*[@id="mstr120"]').click()
+        elif driver.find_element_by_xpath('//*[@id="mstr122"]').get_attribute("onclick"):
+            driver.find_element_by_xpath('//*[@id="mstr122"]').click()
             time.sleep(3)
             driver.find_element_by_xpath('//*[@class="mstrmojo-ContextMenuItem cmd4"]').click()
             time.sleep(3)
-
-        time.sleep(20)
+            
+        time.sleep(40)
         os.rename('Product Dashboard.xlsx', 'Product Infomation '+date_label+'.xlsx')
         break
     except FileExistsError:
