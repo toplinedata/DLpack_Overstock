@@ -7,6 +7,7 @@ Created on Tue Jul 24 21:53:04 2018
 
 import os
 import time
+import shutil
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -49,33 +50,39 @@ driver = webdriver.Chrome(driver_path,chrome_options=options)
 # Supplier Oasis website turn into login page
 Supplier_Oasis = 'https://www.supplieroasis.com/Pages/default.aspx'
 driver.get(Supplier_Oasis)
+
+LoadingChecker = (By.LINK_TEXT, 'Sign In')
+WebDriverWait(driver,60).until(EC.element_to_be_clickable(LoadingChecker))
 driver.find_element_by_link_text('Sign In').click()
 
-LoadingChecker = (By.ID, 'ContentPlaceHolder1_SubmitButton')
-WebDriverWait(driver, 30).until(EC.presence_of_element_located(LoadingChecker))
-# Input username and password and login
-driver.find_element_by_id('ContentPlaceHolder1_UsernameTextBox').send_keys(username)
-driver.find_element_by_id('ContentPlaceHolder1_PasswordTextBox').send_keys(password)
-driver.find_element_by_id('ContentPlaceHolder1_SubmitButton').click()
-time.sleep(5)
-
-# Turn to Report page
-driver.get('https://edge.supplieroasis.com/reporting')
-## Find Side Menu element and use execute java script move
-#sidemenu = driver.find_element_by_xpath('//*[@id="sofs-header"]/menu/div/div[3]/left-menu/ul')
-#driver.execute_script('arguments[0].scrollTop = arguments[0].scrollHeight', sidemenu)
-## Click Report and 
-#driver.find_element_by_xpath('//*[@menu-item="REPORTS"]').click()
-
-LoadingChecker = (By.PARTIAL_LINK_TEXT, 'PRODUCT DASHBOARD')
-WebDriverWait(driver, 60).until(EC.presence_of_element_located(LoadingChecker))
-
-# Scroll to bottum and get the Product Dashboard href
-driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-driver.get(driver.find_element_by_partial_link_text('PRODUCT DASHBOARD').get_attribute('href'))
-#time.sleep(30)
-
 for i in range(3):
+    try:
+        LoadingChecker = (By.ID, 'ContentPlaceHolder1_SubmitButton')
+        WebDriverWait(driver, 30).until(EC.presence_of_element_located(LoadingChecker))
+        # Input username and password and login
+        driver.find_element_by_id('ContentPlaceHolder1_UsernameTextBox').send_keys(username)
+        driver.find_element_by_id('ContentPlaceHolder1_PasswordTextBox').send_keys(password)
+        driver.find_element_by_id('ContentPlaceHolder1_SubmitButton').click()
+        time.sleep(5)
+        
+        # Turn to Report page
+        driver.get('https://edge.supplieroasis.com/reporting')
+        ## Find Side Menu element and use execute java script move
+        #sidemenu = driver.find_element_by_xpath('//*[@id="sofs-header"]/menu/div/div[3]/left-menu/ul')
+        #driver.execute_script('arguments[0].scrollTop = arguments[0].scrollHeight', sidemenu)
+        ## Click Report and 
+        #driver.find_element_by_xpath('//*[@menu-item="REPORTS"]').click()
+        
+        LoadingChecker = (By.PARTIAL_LINK_TEXT, 'PRODUCT DASHBOARD')
+        WebDriverWait(driver, 60).until(EC.presence_of_element_located(LoadingChecker))
+        
+        # Scroll to bottum and get the Product Dashboard href
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        driver.get(driver.find_element_by_partial_link_text('PRODUCT DASHBOARD').get_attribute('href'))
+        #time.sleep(30)
+    except:
+        driver.refresh()
+
     #Turn to "Product Information" sheet
     try:
         LoadingChecker = (By.XPATH, '//*[@id="mstr90"]/div/table/tbody/tr/td[2]/input')#maybe change89 90
@@ -118,10 +125,7 @@ for i in range(3):
             time.sleep(3)
             
         time.sleep(40)
-        os.rename('Product Dashboard.xlsx', 'Product Infomation '+date_label+'.xlsx')
-        break
-    except FileExistsError:
-        print('FileExistsError')
+        shutil.move('Product Dashboard.xlsx', 'Product Infomation '+date_label+'.xlsx')
         break
     except:
         print('fail to download excel file')
