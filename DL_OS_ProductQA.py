@@ -78,6 +78,7 @@ for i in range(5):
         driver.find_element_by_id('ContentPlaceHolder1_PasswordTextBox').send_keys(password)
         driver.find_element_by_id('ContentPlaceHolder1_SubmitButton').click()
         time.sleep(5)
+        break
     except:
         driver.refresh()
 
@@ -96,6 +97,7 @@ for i in range(5):
         # Scroll to bottum and get the Product Dashboard href
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         driver.get(driver.find_element_by_partial_link_text('PRODUCT DASHBOARD').get_attribute('href'))
+        break
     except:
         driver.refresh()
         
@@ -111,6 +113,7 @@ for i in range(5):
         # Click Product Questions & Answers
         driver.find_element_by_xpath('//*[@k="W858"]').click()
         time.sleep(10)
+        break
     except:
         driver.refresh()
         time.sleep(10)
