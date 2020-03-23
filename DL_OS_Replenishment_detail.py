@@ -7,6 +7,7 @@ Created on Wed Jul 25 02:47:26 2018
 
 import os
 import time
+import shutil
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -48,29 +49,52 @@ driver = webdriver.Chrome(driver_path,chrome_options=options)
 # Supplier Oasis website turn into login page
 Supplier_Oasis = 'https://www.supplieroasis.com/Pages/default.aspx'
 driver.get(Supplier_Oasis)
+LoadingChecker = (By.LINK_TEXT, 'Sign In')
+WebDriverWait(driver, 120).until(EC.presence_of_element_located(LoadingChecker))
 driver.find_element_by_link_text('Sign In').click()
 
 # Input username and password and login
-LoadingChecker = (By.ID, 'ContentPlaceHolder1_SubmitButton')
-WebDriverWait(driver, 120).until(EC.presence_of_element_located(LoadingChecker))
-driver.find_element_by_id('ContentPlaceHolder1_UsernameTextBox').send_keys(username)
-driver.find_element_by_id('ContentPlaceHolder1_PasswordTextBox').send_keys(password)
-driver.find_element_by_id('ContentPlaceHolder1_SubmitButton').click()#error
-time.sleep(5)
+try:
+    LoadingChecker = (By.ID, 'ContentPlaceHolder1_SubmitButton')
+    WebDriverWait(driver, 120).until(EC.presence_of_element_located(LoadingChecker))
+    driver.find_element_by_id('ContentPlaceHolder1_UsernameTextBox').send_keys(username)
+    driver.find_element_by_id('ContentPlaceHolder1_PasswordTextBox').send_keys(password)
+    driver.find_element_by_id('ContentPlaceHolder1_SubmitButton').click()#error
+    time.sleep(5)
+except:
+    driver.refresh()
+    LoadingChecker = (By.ID, 'ContentPlaceHolder1_SubmitButton')
+    WebDriverWait(driver, 120).until(EC.presence_of_element_located(LoadingChecker))
+    driver.find_element_by_id('ContentPlaceHolder1_UsernameTextBox').send_keys(username)
+    driver.find_element_by_id('ContentPlaceHolder1_PasswordTextBox').send_keys(password)
+    driver.find_element_by_id('ContentPlaceHolder1_SubmitButton').click()#error
+    time.sleep(5)
 
 # Turn to Report page
 driver.get('https://edge.supplieroasis.com/reporting')
 
+# check download existed or not
+if os.path.exists('Replenishment Dashboard.xlsx'):
+    os.remove('Replenishment Dashboard.xlsx')
+
 # Scroll to bottum and get the Inventory Dashboard href
+try:
+    LoadingChecker = (By.PARTIAL_LINK_TEXT, 'REPLENISHMENT DASHBOARD')
+    WebDriverWait(driver, 120).until(EC.presence_of_element_located(LoadingChecker))
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    # Click Product Replenishment
+    driver.get(driver.find_element_by_partial_link_text('REPLENISHMENT DASHBOARD').get_attribute('href'))
+except:
+    driver.refresh()
+    
+    LoadingChecker = (By.PARTIAL_LINK_TEXT, 'REPLENISHMENT DASHBOARD')
+    WebDriverWait(driver, 120).until(EC.presence_of_element_located(LoadingChecker))
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    # Click Product Replenishment
+    driver.get(driver.find_element_by_partial_link_text('REPLENISHMENT DASHBOARD').get_attribute('href'))
 
-LoadingChecker = (By.PARTIAL_LINK_TEXT, 'REPLENISHMENT DASHBOARD')
-WebDriverWait(driver, 120).until(EC.presence_of_element_located(LoadingChecker))
-driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-# Click Product Replenishment
-driver.get(driver.find_element_by_partial_link_text('REPLENISHMENT DASHBOARD').get_attribute('href'))
-time.sleep(20)
-
-try: #select and click
+# Click dropdown menus and download excel file
+try:
     LoadingChecker = (By.CSS_SELECTOR, '.mstrmojo-HBox-cell.mstrmojo-ToolBar-cell')
     WebDriverWait(driver, 300).until(EC.element_to_be_clickable(LoadingChecker))
     driver.find_elements_by_css_selector('.mstrmojo-HBox-cell.mstrmojo-ToolBar-cell')[0].click()
@@ -89,8 +113,6 @@ try: #select and click
 #driver.execute_script('arguments[0].scrollLeft = arguments[0].scrollWidth', inner)
 #time.sleep(1)
 
-
-# Click dropdown menus and download excel file
 except:
     LoadingChecker = (By.CLASS_NAME, 'tbDown')
     WebDriverWait(driver, 300).until(EC.element_to_be_clickable(LoadingChecker))
@@ -100,4 +122,4 @@ time.sleep(60)
 
 driver.quit()
 
-os.rename('Replenishment Dashboard.xlsx', 'Replenishment detail '+date_label+'.xlsx')
+shutil.move('Replenishment Dashboard.xlsx', 'Replenishment detail '+date_label+'.xlsx')
