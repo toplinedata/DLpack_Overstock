@@ -79,50 +79,29 @@ for i in range(3):
         # Scroll to bottum and get the Product Dashboard href
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         driver.get(driver.find_element_by_partial_link_text('PRODUCT DASHBOARD').get_attribute('href'))
-        #time.sleep(30)
+        time.sleep(30)
     except:
         driver.refresh()
 
     #Turn to "Product Information" sheet
-    try:
-        LoadingChecker = (By.XPATH, '//*[@id="mstr90"]/div/table/tbody/tr/td[2]/input')#maybe change89 90
-        WebDriverWait(driver,60).until(EC.element_to_be_clickable(LoadingChecker))
-        time.sleep(10)
-        driver.find_element_by_css_selector('#mstr90 > div > table > tbody > tr > td:nth-child(2) > input').click()
-    except:
-        LoadingChecker = (By.XPATH, '//*[@id="mstr91"]/div/table/tbody/tr/td[2]/input')#maybe change89 90
-        WebDriverWait(driver, 60).until(EC.element_to_be_clickable(LoadingChecker))
-        time.sleep(10)
-        driver.find_element_by_css_selector('#mstr91 > div > table > tbody > tr > td:nth-child(2) > input').click()
+    css = 'div.mstrmojo-DocLayoutViewer-layout > div > div > div:nth-child(3) > div > div:nth-child(3) > div.content > div > div > table > tbody > tr > td:nth-child(2) > input'
+    LoadingChecker = (By.CSS_SELECTOR, css)
+    WebDriverWait(driver,60).until(EC.element_to_be_clickable(LoadingChecker))
+    driver.find_element_by_css_selector(css).click()
 
     time.sleep(10)
     
-#    try:
-#        #check dropdown menus ready
-#        LoadingChecker = (By.XPATH, '//*[@id="mstr119"]')#maybe change119 120
-#        WebDriverWait(driver, 30).until(EC.presence_of_element_located(LoadingChecker))
-#        # Find inner widow element and scroll to most right side
-#        inner = driver.find_element_by_xpath('//*[@id="mstr80_scrollboxNode"]')
-#        driver.execute_script('arguments[0].scrollLeft = arguments[0].scrollWidth', inner)
-#        time.sleep(10)
-#    except TimeoutException:
-#        print("timeout")
-#        driver.refresh()
-#        continue
-
     # Click dropdown menus and download excel file
-    try:#119 120 121
-        if driver.find_element_by_xpath('//*[@id="mstr121"]').get_attribute("onclick"):
-            driver.find_element_by_xpath('//*[@id="mstr121"]').click()
-            time.sleep(3)
-            driver.find_element_by_xpath('//*[@class="mstrmojo-ContextMenuItem cmd4"]').click()
-            time.sleep(3)
-            
-        elif driver.find_element_by_xpath('//*[@id="mstr122"]').get_attribute("onclick"):
-            driver.find_element_by_xpath('//*[@id="mstr122"]').click()
-            time.sleep(3)
-            driver.find_element_by_xpath('//*[@class="mstrmojo-ContextMenuItem cmd4"]').click()
-            time.sleep(3)
+    try:
+        css = 'div.mstrmojo-DocLayoutViewer-layout > div > div > div:nth-child(3) > div > div:nth-child(1) > div > div:nth-child(2) > div > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > table > tbody > tr > td.mstrmojo-portlet-slot-toolbar.grid-menu > table > tbody > tr > td > table > tbody > tr > td:nth-child(1) > div'
+        LoadingChecker = (By.CSS_SELECTOR, css)
+        WebDriverWait(driver,60).until(EC.element_to_be_clickable(LoadingChecker))
+        driver.find_element_by_css_selector(css).click()
+        time.sleep(3)
+        css = 'table.mstrmojo-itemwrap-table > tbody:nth-child(2) > tr > td.mstrmojo-CMI-text'
+        LoadingChecker = (By.CSS_SELECTOR, css)
+        WebDriverWait(driver,60).until(EC.element_to_be_clickable(LoadingChecker))
+        driver.find_element_by_css_selector(css).click()
             
         time.sleep(40)
         shutil.move('Product Dashboard.xlsx', 'Product Infomation '+date_label+'.xlsx')
