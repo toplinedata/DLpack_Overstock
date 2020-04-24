@@ -54,21 +54,16 @@ WebDriverWait(driver, 120).until(EC.presence_of_element_located(LoadingChecker))
 driver.find_element_by_link_text('Sign In').click()
 
 # Input username and password and login
-try:
-    LoadingChecker = (By.ID, 'ContentPlaceHolder1_SubmitButton')
-    WebDriverWait(driver, 120).until(EC.presence_of_element_located(LoadingChecker))
-    driver.find_element_by_id('ContentPlaceHolder1_UsernameTextBox').send_keys(username)
-    driver.find_element_by_id('ContentPlaceHolder1_PasswordTextBox').send_keys(password)
-    driver.find_element_by_id('ContentPlaceHolder1_SubmitButton').click()#error
-    time.sleep(5)
-except:
-    driver.refresh()
-    LoadingChecker = (By.ID, 'ContentPlaceHolder1_SubmitButton')
-    WebDriverWait(driver, 120).until(EC.presence_of_element_located(LoadingChecker))
-    driver.find_element_by_id('ContentPlaceHolder1_UsernameTextBox').send_keys(username)
-    driver.find_element_by_id('ContentPlaceHolder1_PasswordTextBox').send_keys(password)
-    driver.find_element_by_id('ContentPlaceHolder1_SubmitButton').click()#error
-    time.sleep(5)
+for _ in range(3):
+    try:
+        LoadingChecker = (By.ID, 'ContentPlaceHolder1_SubmitButton')
+        WebDriverWait(driver, 120).until(EC.presence_of_element_located(LoadingChecker))
+        driver.find_element_by_id('ContentPlaceHolder1_UsernameTextBox').send_keys(username)
+        driver.find_element_by_id('ContentPlaceHolder1_PasswordTextBox').send_keys(password)
+        driver.find_element_by_id('ContentPlaceHolder1_SubmitButton').click()
+        time.sleep(5)
+    except:
+        driver.refresh()
 
 # Turn to Report page
 driver.get('https://edge.supplieroasis.com/reporting')
@@ -78,26 +73,23 @@ if os.path.exists('Replenishment Dashboard.xlsx'):
     os.remove('Replenishment Dashboard.xlsx')
 
 # Scroll to bottum and get the Inventory Dashboard href
-try:
-    LoadingChecker = (By.PARTIAL_LINK_TEXT, 'REPLENISHMENT DASHBOARD')
-    WebDriverWait(driver, 120).until(EC.presence_of_element_located(LoadingChecker))
-    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-    # Click Product Replenishment
-    driver.get(driver.find_element_by_partial_link_text('REPLENISHMENT DASHBOARD').get_attribute('href'))
-except:
-    driver.refresh()
+for _ in range(3):
+    try:
+        LoadingChecker = (By.PARTIAL_LINK_TEXT, 'REPLENISHMENT DASHBOARD')
+        WebDriverWait(driver, 120).until(EC.presence_of_element_located(LoadingChecker))
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        # Click Product Replenishment
+        driver.get(driver.find_element_by_partial_link_text('REPLENISHMENT DASHBOARD').get_attribute('href'))
+    except:
+        driver.refresh()
     
-    LoadingChecker = (By.PARTIAL_LINK_TEXT, 'REPLENISHMENT DASHBOARD')
-    WebDriverWait(driver, 120).until(EC.presence_of_element_located(LoadingChecker))
-    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-    # Click Product Replenishment
-    driver.get(driver.find_element_by_partial_link_text('REPLENISHMENT DASHBOARD').get_attribute('href'))
-
 # Click dropdown menus and download excel file
 try:
     LoadingChecker = (By.CSS_SELECTOR, '.mstrmojo-HBox-cell.mstrmojo-ToolBar-cell')
-    WebDriverWait(driver, 300).until(EC.element_to_be_clickable(LoadingChecker))
+    WebDriverWait(driver, 30).until(EC.element_to_be_clickable(LoadingChecker))
     driver.find_elements_by_css_selector('.mstrmojo-HBox-cell.mstrmojo-ToolBar-cell')[0].click()
+    LoadingChecker = (By.CSS_SELECTOR, '.mstrmojo-CMI-text')
+    WebDriverWait(driver, 30).until(EC.element_to_be_clickable(LoadingChecker))
     driver.find_elements_by_css_selector('.mstrmojo-CMI-text')[1].click()
 
 # Click Product Replenishment
@@ -115,8 +107,10 @@ try:
 
 except:
     LoadingChecker = (By.CLASS_NAME, 'tbDown')
-    WebDriverWait(driver, 300).until(EC.element_to_be_clickable(LoadingChecker))
+    WebDriverWait(driver, 30).until(EC.element_to_be_clickable(LoadingChecker))
     driver.find_elements_by_class_name('tbDown')[0].click()
+    LoadingChecker = (By.CLASS_NAME, 'cmd4')
+    WebDriverWait(driver, 30).until(EC.element_to_be_clickable(LoadingChecker))
     driver.find_elements_by_class_name('cmd4')[0].click()
 time.sleep(60)
 
