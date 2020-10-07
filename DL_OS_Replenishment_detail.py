@@ -65,9 +65,22 @@ for _ in range(3):
     except:
         driver.refresh()
 
-# Turn to Report page
-driver.get('https://edge.supplieroasis.com/reporting')
+for i in range(3):
+    try:
+        # Turn to Report page
+        driver.get('https://edge.supplieroasis.com/partner-reports')
+        
+        LoadingChecker = (By.PARTIAL_LINK_TEXT, 'Product Dashboard')
+        WebDriverWait(driver, 60).until(EC.presence_of_element_located(LoadingChecker))
+        # Scroll to bottum and get the Product Dashboard href
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        driver.get(driver.find_element_by_partial_link_text('Product Dashboard').get_attribute('href'))
+        time.sleep(30)
+        break
 
+    except:
+        driver.refresh()
+        
 # check download existed or not
 if os.path.exists('Replenishment Dashboard.xlsx'):
     os.remove('Replenishment Dashboard.xlsx')

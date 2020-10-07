@@ -78,19 +78,19 @@ for j in range(3):
     for i in range(3):
         try:
             # Turn to Report page
-            driver.get('https://edge.supplieroasis.com/reporting')
+            driver.get('https://edge.supplieroasis.com/partner-reports')
             ## Find Side Menu element and use execute java script move
             #sidemenu = driver.find_element_by_xpath('//*[@id="sofs-header"]/menu/div/div[3]/left-menu/ul')
             #driver.execute_script('arguments[0].scrollTop = arguments[0].scrollHeight', sidemenu)
             ## Click Report and 
             #driver.find_element_by_xpath('//*[@menu-item="REPORTS"]').click()
             
-            LoadingChecker = (By.PARTIAL_LINK_TEXT, 'PRODUCT DASHBOARD')
+            LoadingChecker = (By.PARTIAL_LINK_TEXT, 'Product Dashboard')
             WebDriverWait(driver, 60).until(EC.presence_of_element_located(LoadingChecker))
             
             # Scroll to bottum and get the Product Dashboard href
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            driver.get(driver.find_element_by_partial_link_text('PRODUCT DASHBOARD').get_attribute('href'))
+            driver.get(driver.find_element_by_partial_link_text('Product Dashboard').get_attribute('href'))
             time.sleep(30)
             break
         except:

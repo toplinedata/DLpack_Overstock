@@ -82,35 +82,27 @@ for i in range(5):
     except:
         driver.refresh()
 
-# Turn to Report page
-driver.get('https://edge.supplieroasis.com/reporting')
-## Find Side Menu element and use execute java script move
-#sidemenu = driver.find_element_by_xpath('//*[@id="sofs-header"]/menu/div/div[3]/left-menu/ul')
-#driver.execute_script('arguments[0].scrollTop = arguments[0].scrollHeight', sidemenu)
-## Click Report and 
-#driver.find_element_by_xpath('//*[@menu-item="REPORTS"]').click()
-
 for i in range(5):
     try:
-        LoadingChecker = (By.PARTIAL_LINK_TEXT, 'PRODUCT DASHBOARD')
-        WebDriverWait(driver, 120).until(EC.presence_of_element_located(LoadingChecker))
+        # Turn to Report page
+        driver.get('https://edge.supplieroasis.com/partner-reports')
+        
+        LoadingChecker = (By.PARTIAL_LINK_TEXT, 'Product Dashboard')
+        WebDriverWait(driver, 60).until(EC.presence_of_element_located(LoadingChecker))
         # Scroll to bottum and get the Product Dashboard href
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        driver.get(driver.find_element_by_partial_link_text('PRODUCT DASHBOARD').get_attribute('href'))
+        driver.get(driver.find_element_by_partial_link_text('Product Dashboard').get_attribute('href'))
+        time.sleep(30)
         break
+
     except:
         driver.refresh()
         
 for i in range(5):
     try:
+        # Click Product Questions & Answers
         LoadingChecker = (By.XPATH, '//*[@k="W858"]')
         WebDriverWait(driver, 120).until(EC.presence_of_element_located(LoadingChecker))
-        #Find inner widow element and scroll to most right side
-        #inner = driver.find_element_by_xpath('//*[@id="mstr80_scrollboxNode"]')
-        #driver.execute_script('arguments[0].scrollLeft = arguments[0].scrollWidth', inner)
-        #time.sleep(3)
-                
-        # Click Product Questions & Answers
         driver.find_element_by_xpath('//*[@k="W858"]').click()
         time.sleep(10)
         break
@@ -122,27 +114,18 @@ for i in range(5):
 QA_page = driver.window_handles[-1]
 driver.switch_to_window(QA_page)
 
-
-# Click dropdown menus and download excel file
-#try:
-#    driver.find_element_by_xpath('//*[@id="mstr136"]/div').click()
-#    time.sleep(3)
-#    driver.find_element_by_xpath('//*[@class="mstrmojo-ContextMenuItem cmd4"]').click()
-#except:
-#    driver.find_element_by_xpath('//*[@id="mstr135"]/div').click()
-#    time.sleep(3)
-#    driver.find_element_by_xpath('//*[@class="mstrmojo-ContextMenuItem cmd4"]').click()
-#    
-try: #select and click
+# Click dropdown menus then download excel file
+try: 
     LoadingChecker = (By.CSS_SELECTOR, '.mstrmojo-HBox-cell.mstrmojo-ToolBar-cell')
-    WebDriverWait(driver, 200).until(EC.element_to_be_clickable(LoadingChecker))
+    WebDriverWait(driver, 120).until(EC.element_to_be_clickable(LoadingChecker))
     driver.find_elements_by_css_selector('.mstrmojo-HBox-cell.mstrmojo-ToolBar-cell')[0].click()
+    time.sleep(5)
     driver.find_elements_by_css_selector('.mstrmojo-CMI-text')[1].click()
-# Click dropdown menus and download excel file
 except:
     LoadingChecker = (By.CLASS_NAME, 'tbDown')
-    WebDriverWait(driver, 200).until(EC.element_to_be_clickable(LoadingChecker))
+    WebDriverWait(driver, 120).until(EC.element_to_be_clickable(LoadingChecker))
     driver.find_elements_by_class_name('tbDown')[0].click()
+    time.sleep(5)
     driver.find_elements_by_class_name('cmd4')[0].click()
     
 time.sleep(30)
