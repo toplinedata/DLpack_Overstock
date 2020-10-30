@@ -6,16 +6,16 @@ Created on Thu Oct 17 10:39:00 2019
 """
 
 import os
-import shutil
 import time
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+import zipfile
 
 # Today's date
-date_label = time.strftime('%Y%m%d')
+date_label = time.strftime('%Y_%m_%d')
 
 try:
     #local
@@ -34,7 +34,7 @@ else:
     driver_path = 'C:\\Users\\raymond.hung\\chrome\\chromedriver.exe'
     work_dir = 'C:\\Users\\raymond.hung\\Documents\\Automate_Script\\DLpack_Overstock\\'
     temp_dir = 'N:\E Commerce\Public Share\Dot Com - Overstock\Opportunity Compass\opportunity compass raw data\\'
-    Download_dir = 'N:\E Commerce\Public Share\Dot Com - Overstock\Opportunity Compass\opportunity compass raw data\\'
+    Download_dir = 'N:\E Commerce\Public Share\Dot Com - Overstock\Opportunity Compass\opportunity compass raw data\\Full Catalog\\'
 
 os.chdir(temp_dir)
 
@@ -74,8 +74,15 @@ time.sleep(3)
 LoadingChecker = (By.CSS_SELECTOR, '.btn-primary')
 WebDriverWait(driver, 120).until(EC.presence_of_element_located(LoadingChecker))
 driver.find_element_by_css_selector('.btn-primary').click()
-time.sleep(60)
+time.sleep(30)
 
 driver.quit()
 
-shutil.move('Opportunity_Compass_Snapshot.xlsx', Download_dir+'Opportunity_Compass_Snapshot_'+date_label+'.xlsx')
+
+fz = zipfile.ZipFile('Opportunity-Compass-FULL_CATALOG-'+date_label+'.zip', 'r')
+for file in fz.namelist():
+    fz.extract(file, Download_dir)
+    fz.close()
+
+if os.path.exists(Download_dir+file):
+    os.remove('Opportunity-Compass-FULL_CATALOG-'+date_label+'.zip')
