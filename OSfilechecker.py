@@ -6,7 +6,7 @@ Created on Thu Nov 28 02:54:57 2019
 """
 import os
 import time
-from datetime import datetime
+import subprocess
 
 try:    
     #local
@@ -31,28 +31,31 @@ except:
     
 # Today's date_label for OS daily download script
 date_label = time.strftime('%Y%m%d')
+checker01 = 0
+checker02 = 0
+checker03 = 0
 
 # Check today's download file for OS daily download script
 for i in range(3):
-    count = 0
     file_list=list(set(os.listdir(OS_ProductInfo_dir)+os.listdir(OS_ProductQnA_dir) \
                     +os.listdir(OS_Replenishment_dir)))
 
     for file in file_list:
         if 'Product Infomation '+date_label in file:
             print("Product Infomation OK")
-            count+=1
+            checker01 = 1
         elif 'Product Page Q & A '+date_label in file:
             print("Product Page Q&A OK")
-            count+=1       
+            checker02 = 1
         elif 'Replenishment detail '+date_label in file:
             print("Replenishment detail OK")
-            count+=1
+            checker03 = 1
 
-    if count < 3:
-        os.system("python "+script_dir+"DL_OS_ProductInfo.py")
-        os.system("python "+script_dir+"DL_OS_ProductQA.py")
-        os.system("python "+script_dir+"DL_OS_Replenishment_detail.py")
+    if checker01 != 1:
+        subprocess.call("python "+script_dir+"DL_OS_ProductInfo.py")
+    elif checker02 != 1:
+        subprocess.call("python "+script_dir+"DL_OS_ProductQA.py")
+    elif checker03 != 1:
+        subprocess.call("python "+script_dir+"DL_OS_Replenishment_detail.py")
     else:
         break
-
